@@ -21,7 +21,10 @@ const app = express();
 
  
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "*", // later you can restrict to your frontend URL
+  credentials: true
+}));
 
  
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -41,6 +44,11 @@ app.use("/api/watchlist", watchlistRoutes);
  
 app.get("/", (req, res) => {
   res.send("API is running...");
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
 });
  
 const PORT = process.env.PORT || 15400;
