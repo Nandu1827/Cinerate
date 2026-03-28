@@ -142,9 +142,15 @@ const Admin = ({ setMovies }) => {
 
   return (
     <div className="admin-page">
+      <div className="admin-page-intro">
+        <header className="cine-page-header admin-page-header">
+          <h1 className="cine-page-title">Admin</h1>
+          <p className="cine-page-subtitle">Manage movies and catalog content.</p>
+        </header>
+      </div>
       <div className="admin-container">
-        <h1>Admin Panel</h1>
-        <p>{editingMovie ? 'Edit Movie' : 'Add a new movie to the database'}</p>
+        <h2 className="admin-form-title">{editingMovie ? 'Edit movie' : 'Add a movie'}</h2>
+        <p>{editingMovie ? 'Update details below, then save.' : 'Fill in the form to publish a new title.'}</p>
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
         
@@ -239,13 +245,15 @@ const Admin = ({ setMovies }) => {
                   <p><strong>Year:</strong> {movie.releaseYear}</p>
                   <div className="movie-actions">
                     <button
-                      className="btn btn-primary btn-sm me-2"
+                      type="button"
+                      className="auth-button btn-sm me-2"
                       onClick={() => handleEdit(movie)}
                     >
                       Edit
                     </button>
                     <button
-                      className="btn btn-danger btn-sm"
+                      type="button"
+                      className="auth-button admin-movie-delete btn-sm"
                       onClick={() => handleDelete(movie._id)}
                     >
                       Delete

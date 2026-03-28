@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Notification = require('../models/Notification');
  
 exports.createNotification = async (req, res) => {
@@ -83,4 +84,26 @@ exports.markAsRead = async (req, res) => {
     console.error('Error marking notification as read:', error);
     res.status(500).json({ message: 'Error updating notification', error: error.message });
   }
-}; 
+};
+
+exports.deleteNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Notification ID is required' });
+    }
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid notification ID' });
+    }
+
+    const deleted = await Notification.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Notification not found' });
+    }
+
+    res.status(200).json({ message: 'Notification deleted', id });
+  } catch (error) {
+    console.error('Error deleting notification:', error);
+    res.status(500).json({ message: 'Error deleting notification', error: error.message });
+  }
+};

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './theme.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -11,6 +12,15 @@ const link = document.createElement('link');
 link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap';
 link.rel = 'stylesheet';
 document.head.appendChild(link);
+
+try {
+  const savedTheme = localStorage.getItem('cine-theme');
+  if (savedTheme === 'dark' || savedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+} catch {
+  /* ignore */
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

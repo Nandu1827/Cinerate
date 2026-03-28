@@ -1,0 +1,119 @@
+.cine-footer {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  margin-top: auto;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #6b7280;
+}
+
+.cine-footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 2rem;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .cine-footer-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .cine-footer-social {
+    justify-content: center;
+  }
+}
+
+.cine-footer-logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #4a90e2;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+.cine-footer-logo:hover {
+  color: #3b7dd4;
+}
+
+.cine-footer-about {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0 0 1.25rem;
+  max-width: 280px;
+}
+
+@media (max-width: 768px) {
+  .cine-footer-about {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.cine-footer-social {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.cine-footer-social a {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.cine-footer-social a:hover {
+  background: #4a90e2;
+  color: #fff;
+}
+
+.cine-footer-heading {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111827;
+  margin: 0 0 1rem;
+}
+
+.cine-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cine-footer-links li {
+  margin-bottom: 0.55rem;
+}
+
+.cine-footer-links a {
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.cine-footer-links a:hover {
+  color: #4a90e2;
+}
+
+.cine-footer-bottom {
+  border-top: 1px solid #f3f4f6;
+  padding: 1rem 1.25rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.cine-footer-bottom p {
+  margin: 0;
+}

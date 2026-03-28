@@ -1,0 +1,557 @@
+/* Theme variables — light default, dark via html[data-theme="dark"] */
+
+:root,
+html[data-theme="light"] {
+  color-scheme: light;
+  --cine-bg-page: #ffffff;
+  --cine-bg-elevated: #ffffff;
+  --cine-bg-soft: #f3f4f6;
+  --cine-bg-input: #eff6ff;
+  --cine-text: #111827;
+  --cine-text-secondary: #374151;
+  --cine-text-muted: #6b7280;
+  --cine-text-subtle: #9ca3af;
+  --cine-border: #e5e7eb;
+  --cine-nav-bg: #ffffff;
+  --cine-primary: #4a90e2;
+  --cine-primary-hover: #3b7dd4;
+  --cine-review-item: #f9fafb;
+  --cine-shadow: 0 4px 24px rgba(17, 24, 39, 0.06);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  /* Stronger separation + higher-contrast text (fixes “washed out” UI) */
+  --cine-bg-page: #0a0f18;
+  --cine-bg-elevated: #121a28;
+  --cine-bg-soft: #182232;
+  --cine-bg-input: #1c2838;
+  --cine-text: #f8fafc;
+  --cine-text-secondary: #e8eef4;
+  --cine-text-muted: #cbd5e1;
+  --cine-text-subtle: #a8b9cc;
+  --cine-border: #3d4d63;
+  --cine-nav-bg: #0f1622;
+  --cine-primary: #6ba3f5;
+  --cine-primary-hover: #8eb8f8;
+  --cine-review-item: #182232;
+  --cine-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+body {
+  background-color: var(--cine-bg-page);
+  color: var(--cine-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+main {
+  background: var(--cine-bg-page);
+}
+
+.cine-page-title {
+  color: var(--cine-text);
+}
+
+.cine-page-subtitle {
+  color: var(--cine-text-subtle);
+}
+
+.page {
+  color: var(--cine-text);
+}
+
+.page h1,
+.page h2 {
+  color: var(--cine-text);
+}
+
+.page p {
+  color: var(--cine-text-muted);
+}
+
+/* Shared surfaces (App.css) */
+.review-page {
+  color: var(--cine-text);
+}
+
+.review-container {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+  box-shadow: var(--cine-shadow);
+}
+
+.review-details h4,
+.review-details h5 {
+  color: var(--cine-text);
+}
+
+.review-item {
+  background: var(--cine-review-item);
+  border: 1px solid var(--cine-border);
+}
+
+.signin-prompt,
+.review-message {
+  color: var(--cine-text-muted);
+}
+
+.profile-container {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+}
+
+.profile-container p {
+  color: var(--cine-text-secondary);
+}
+
+.profile-container h2,
+.profile-container h3 {
+  color: var(--cine-text);
+}
+
+.user-reviews .review-item {
+  background: var(--cine-review-item);
+  border: 1px solid var(--cine-border);
+}
+
+.user-reviews .review-item h4 {
+  color: var(--cine-text);
+}
+
+.user-reviews .review-item p {
+  color: var(--cine-text-muted);
+}
+
+.contact-container {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+}
+
+.contact-info h2,
+.contact-form h2 {
+  color: var(--cine-text);
+}
+
+.contact-info p,
+.contact-details li {
+  color: var(--cine-text-muted);
+}
+
+.contact-details li strong {
+  color: var(--cine-text);
+}
+
+.social-links h3 {
+  color: var(--cine-text);
+}
+
+.social-icon {
+  background: var(--cine-bg-soft);
+  color: var(--cine-text-muted);
+}
+
+.admin-page {
+  background-color: var(--cine-bg-page);
+}
+
+.admin-container {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+}
+
+.admin-container h1,
+.admin-container h2 {
+  color: var(--cine-text);
+}
+
+.admin-container > p {
+  color: var(--cine-text-muted);
+}
+
+.admin-container .input-group label {
+  color: var(--cine-text-secondary);
+}
+
+.admin-container .input-group input,
+.admin-container .input-group textarea {
+  background: var(--cine-bg-page);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+/* Navbar (imported after — these need html prefix) */
+html[data-theme="dark"] .cine-navbar {
+  background: var(--cine-nav-bg) !important;
+  box-shadow: 0 1px 0 var(--cine-border), 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="dark"] .cine-brand-dark {
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .cine-nav-link {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .cine-nav-link--active {
+  color: var(--cine-primary) !important;
+}
+
+html[data-theme="dark"] .cine-footer-links a {
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-footer-links a:hover {
+  color: var(--cine-primary);
+}
+
+html[data-theme="dark"] .cine-nav-toggler {
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-profile-dropdown {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-profile-dropdown-item {
+  color: var(--cine-text-secondary);
+}
+
+html[data-theme="dark"] .cine-profile-dropdown-item:hover {
+  background: var(--cine-bg-soft);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-nav-profile-dot {
+  border-color: var(--cine-primary);
+}
+
+html[data-theme="dark"] .cine-nav-signin-outline {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+  color: var(--cine-text) !important;
+}
+
+html[data-theme="dark"] .notification-menu {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .notification-header {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .notification-item {
+  border-color: var(--cine-border);
+}
+
+/* Footer */
+html[data-theme="dark"] .cine-footer {
+  background: var(--cine-nav-bg);
+  border-color: var(--cine-border);
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-footer-bottom {
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-footer-heading {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-footer-about {
+  color: var(--cine-text-muted);
+}
+
+/* Home — hero title/sub use hardcoded light-theme colors in Home.css; override for dark */
+html[data-theme="dark"] .cine-hero-title {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-hero-sub {
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-badge {
+  color: var(--cine-primary);
+  background: rgba(107, 163, 245, 0.15);
+}
+
+html[data-theme="dark"] .cine-btn-outline {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-btn-outline:hover {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-primary);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-empty {
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-carousel-card {
+  background: var(--cine-bg-elevated);
+  box-shadow: var(--cine-shadow);
+}
+
+html[data-theme="dark"] .cine-carousel-caption span {
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-home {
+  background: linear-gradient(180deg, #0f172a 0%, var(--cine-bg-page) 28%, var(--cine-bg-page) 100%);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-section-head h2 {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-section-head p {
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-why {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-why-card {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-carousel-btn {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-carousel-caption strong {
+  color: var(--cine-text);
+}
+
+/* Browse */
+html[data-theme="dark"] .cine-browse-genre-label {
+  color: var(--cine-text-secondary);
+}
+
+html[data-theme="dark"] .cine-browse-chip {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-browse-chip--active {
+  color: #e0f2fe;
+  border-color: var(--cine-primary);
+  background: rgba(91, 148, 236, 0.22);
+  font-weight: 600;
+}
+
+html[data-theme="dark"] .cine-browse-search-input {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-browse-select {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-browse-clear-btn {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-browse-empty {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+  color: var(--cine-text-muted);
+}
+
+/* Auth */
+html[data-theme="dark"] .cine-auth-page {
+  background: var(--cine-bg-soft);
+}
+
+html[data-theme="dark"] .cine-auth-card {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-auth-card-title {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-auth-card-sub {
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-auth-social-btn {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-auth-input-wrap {
+  background: var(--cine-bg-input);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-auth-input-wrap input {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-auth-select-wrap select {
+  background: var(--cine-bg-input);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-auth-footer,
+html[data-theme="dark"] .cine-auth-terms {
+  color: var(--cine-text-muted);
+}
+
+/* Profile page component */
+html[data-theme="dark"] .cine-profile-name {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-profile-bio {
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-profile-tabs {
+  background: var(--cine-bg-soft);
+}
+
+html[data-theme="dark"] .cine-profile-tab:not(.cine-profile-tab--active) {
+  color: var(--cine-text-muted);
+}
+
+html[data-theme="dark"] .cine-profile-panel-empty {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-profile-edit-form {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .cine-profile-edit-form input,
+html[data-theme="dark"] .cine-profile-edit-form textarea {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+/* Watchlist */
+html[data-theme="dark"] .cine-watchlist-empty-box {
+  background: var(--cine-bg-soft);
+  border-color: var(--cine-border);
+}
+
+/* Form controls in App.css auth */
+html[data-theme="dark"] .auth-container {
+  background: var(--cine-bg-elevated);
+  border-color: var(--cine-border);
+}
+
+html[data-theme="dark"] .auth-container h2 {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .input-group input,
+html[data-theme="dark"] .input-group textarea,
+html[data-theme="dark"] .input-group select {
+  background: var(--cine-bg-page);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .form-select,
+html[data-theme="dark"] .form-control {
+  background-color: var(--cine-bg-page);
+  border-color: var(--cine-border);
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .cine-btn-primary-solid {
+  background: var(--cine-primary);
+  color: #fff !important;
+}
+
+html[data-theme="dark"] .cine-btn-primary-solid:hover {
+  background: var(--cine-primary-hover);
+}
+
+/* Alerts — readable on dark backgrounds */
+html[data-theme="dark"] .error-message {
+  background: rgba(127, 29, 29, 0.45);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+}
+
+html[data-theme="dark"] .success-message {
+  background: rgba(6, 78, 59, 0.45);
+  color: #a7f3d0;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+/* Bootstrap utility often used in Review */
+html[data-theme="dark"] .text-muted {
+  color: var(--cine-text-muted) !important;
+}
+
+html[data-theme="dark"] small.text-muted {
+  color: var(--cine-text-subtle) !important;
+}
+
+/* Review page featured overlay text stays on poster; details below use vars */
+html[data-theme="dark"] .review-details h2,
+html[data-theme="dark"] .review-details h3 {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .emotion-tag {
+  color: var(--cine-text-secondary);
+  background: var(--cine-bg-soft);
+}
+
+/* Movie cards / admin list text */
+html[data-theme="dark"] .movie-details h3,
+html[data-theme="dark"] .admin-container .movie-details h3 {
+  color: var(--cine-text);
+}
+
+html[data-theme="dark"] .movie-details p {
+  color: var(--cine-text-muted);
+}
+
+/* Star rating visibility */
+html[data-theme="dark"] .star {
+  color: #475569;
+}
+
+html[data-theme="dark"] .star.filled {
+  color: #fbbf24;
+}
+
+/* Browse poster placeholder */
+html[data-theme="dark"] .cine-poster-placeholder {
+  color: var(--cine-text-subtle);
+  background: linear-gradient(145deg, var(--cine-bg-soft), var(--cine-bg-elevated));
+}

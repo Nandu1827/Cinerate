@@ -44,23 +44,27 @@ const ContactUs = ({ isSignedIn }) => {
 
   return (
     <div className="contact-page">
+      <header className="cine-page-header">
+        <h1 className="cine-page-title">Contact</h1>
+        <p className="cine-page-subtitle">We&apos;d love to hear from you — questions, ideas, or feedback.</p>
+      </header>
       <div className="contact-container">
         <div className="contact-info">
           <h2>Get in Touch</h2>
-          <p>We'd love to hear from you! Reach out with any questions or feedback.</p>
+          <p>Reach out with any questions or feedback about CineRate.</p>
           <ul className="contact-details">
             <li>
-              <i className="fas fa-envelope" style={{ marginRight: '0.5rem', color: '#ff6f61' }}></i>
+              <i className="fas fa-envelope contact-detail-icon" aria-hidden="true" />
               <strong>Email:</strong>{' '}
-              <a href="mailto:support@popcorntimes.com">support@popcorntimes.com</a>
+              <a href="mailto:support@cinerate.app">support@cinerate.app</a>
             </li>
             <li>
-              <i className="fas fa-phone" style={{ marginRight: '0.5rem', color: '#ff6f61' }}></i>
+              <i className="fas fa-phone contact-detail-icon" aria-hidden="true" />
               <strong>Phone:</strong>{' '}
               <a href="tel:+1234567890">+1 (234) 567-890</a>
             </li>
             <li>
-              <i className="fas fa-map-marker-alt" style={{ marginRight: '0.5rem', color: '#ff6f61' }}></i>
+              <i className="fas fa-map-marker-alt contact-detail-icon" aria-hidden="true" />
               <strong>Address:</strong> 123 Movie Lane, Cinema City, CA 90210
             </li>
           </ul>

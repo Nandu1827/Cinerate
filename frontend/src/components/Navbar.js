@@ -1,108 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './Navbar.css';
 
-const Navbar = ({ isSignedIn, userEmail, handleSignOut, isAdmin }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
+const Navbar = ({ isSignedIn, handleSignOut, isAdmin, theme, toggleTheme }) => {
+  const location = useLocation();
+  const profileWrapRef = useRef(null);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     if (isAdmin) {
-      console.log('Admin user detected, setting up notifications...');
       fetchNotifications();
-      // Set up polling for new notifications every 30 seconds
       const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
     }
   }, [isAdmin]);
 
+  useEffect(() => {
+    const closeProfile = (e) => {
+      if (profileWrapRef.current && !profileWrapRef.current.contains(e.target)) {
+        setProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', closeProfile);
+    return () => document.removeEventListener('mousedown', closeProfile);
+  }, []);
+
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        setError('Authentication error: No token found');
-        setNotifications([]);
         setUnreadCount(0);
         return;
       }
 
       const response = await axios.get('http://localhost:15400/api/notifications/admin/notifications', {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (Array.isArray(response.data)) {
-        setNotifications(response.data);
-        setUnreadCount(response.data.filter(n => !n.isRead).length);
-        setError('');
+        setUnreadCount(response.data.filter((n) => !n.isRead).length);
       } else {
-        setError('Invalid notifications data received');
-        setNotifications([]);
         setUnreadCount(0);
       }
-    } catch (error) {
-      if (error.response && error.response.status === 403) {
-        setError('You must be an admin to view notifications.');
-      } else {
-        setError('Error fetching notifications. Please try again.');
-      }
-      setNotifications([]);
+    } catch {
       setUnreadCount(0);
     }
   };
 
-  const toggleDropdown = () => {
-    if (isAdmin) {
-      setIsOpen(!isOpen);
-      if (!isOpen) {
-        fetchNotifications(); // Refresh notifications when opening dropdown
-      }
-    }
+  const topRatedActive = location.pathname === '/browse' && location.search.includes('sortBy=rating');
+
+  const navClassBrowse = ({ isActive }) => {
+    const onBrowse = isActive && location.pathname === '/browse';
+    const moviesActive = onBrowse && !location.search.includes('sortBy=rating');
+    return `cine-nav-link${moviesActive ? ' cine-nav-link--active' : ''}`;
   };
 
-  const handleNotificationClick = async (notification) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        setError('Authentication error: No token found');
-        return;
-      }
+  const navClassTopRated = () =>
+    `cine-nav-link${topRatedActive ? ' cine-nav-link--active' : ''}`;
 
-      await axios.put(
-        `http://localhost:15400/api/notifications/admin/notifications/${notification._id}/read`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-      
-      // Update local state immediately for better UX
-      setNotifications(prevNotifications =>
-        prevNotifications.map(n =>
-          n._id === notification._id ? { ...n, isRead: true } : n
-        )
-      );
-      setUnreadCount(prev => Math.max(0, prev - 1));
-      
-      // Refresh notifications in background
-      fetchNotifications();
-    } catch (error) {
-      console.error('Error marking notification as read:', error.response?.data || error.message);
-      setError('Error marking notification as read. Please try again.');
-    }
-  };
+  const navClassDefault = ({ isActive }) =>
+    `cine-nav-link${isActive ? ' cine-nav-link--active' : ''}`;
+
+  const themeButton = (
+    <li className="nav-item">
+      <button
+        type="button"
+        className="cine-theme-toggle"
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        <i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} aria-hidden="true" />
+      </button>
+    </li>
+  );
 
   return (
-    <nav className="navbar navbar-expand-lg">
-      <div className="container">
-        <Link className="navbar-brand" to="/">PopcornTimes</Link>
+    <nav className="cine-navbar navbar navbar-expand-lg">
+      <div className="container-fluid cine-nav-shell">
+        <Link className="cine-navbar-brand cine-navbar-brand-split" to="/">
+          <span className="cine-brand-dark">Cine</span>
+          <span className="cine-brand-blue">Rate</span>
+        </Link>
+
         <button
-          className="navbar-toggler"
+          className="navbar-toggler cine-nav-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
@@ -110,91 +94,131 @@ const Navbar = ({ isSignedIn, userEmail, handleSignOut, isAdmin }) => {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon" />
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
+
+        <div className="collapse navbar-collapse cine-nav-collapse" id="navbarNav">
+          <ul className="navbar-nav cine-nav-center">
             <li className="nav-item">
-              <Link className="nav-link" to="/">Home</Link>
+              <NavLink className={navClassDefault} to="/" end>
+                Home
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/browse">Browse</Link>
+              <NavLink className={navClassBrowse} to="/browse">
+                Movies
+              </NavLink>
             </li>
             <li className="nav-item">
-              {!isAdmin && (
-                <Link className="nav-link" to="/contact">Contact</Link>
-              )}
+              <NavLink className={navClassTopRated} to="/browse?sortBy=rating">
+                Top Rated
+              </NavLink>
             </li>
+            {isSignedIn && (
+              <li className="nav-item">
+                <NavLink className={navClassDefault} to="/watchlist">
+                  Watchlist
+                </NavLink>
+              </li>
+            )}
+            {!isAdmin && (
+              <li className="nav-item">
+                <NavLink className={navClassDefault} to="/contact">
+                  Contact
+                </NavLink>
+              </li>
+            )}
+            {isAdmin && (
+              <li className="nav-item">
+                <NavLink className={navClassDefault} to="/admin">
+                  Admin
+                </NavLink>
+              </li>
+            )}
+          </ul>
+
+          <ul className="navbar-nav cine-nav-actions ms-lg-auto">
+            {!isAdmin && (
+              <li className="nav-item d-none d-lg-block">
+                <Link className="cine-nav-icon" to="/browse" title="Browse & filter">
+                  <i className="fas fa-filter" aria-hidden="true" />
+                </Link>
+              </li>
+            )}
             {isSignedIn ? (
               <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/watchlist">Watchlist</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/profile">Profile</Link>
-                </li>
-                {isAdmin && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/admin">Admin Panel</Link>
-                  </li>
-                )}
-                <li className="nav-item">
-                  <button className="nav-link" onClick={handleSignOut}>Sign Out</button>
-                </li>
-                {isAdmin && (
-                  <li className="nav-item">
-                    <div className="notification-dropdown">
-                      <div className="notification-trigger" onClick={toggleDropdown}>
-                        <i className="fas fa-bell notification-icon"></i>
-                        {unreadCount > 0 && (
-                          <span className="notification-badge">{unreadCount}</span>
-                        )}
-                      </div>
-                      {isOpen && (
-                        <div className="notification-menu">
-                          <div className="notification-header">
-                            <h3>Notifications</h3>
-                            <button className="close-button" onClick={toggleDropdown}>
-                              <i className="fas fa-times"></i>
-                            </button>
-                          </div>
-                          {error && <div className="error-message">{error}</div>}
-                          <div className="notification-list">
-                            {notifications && notifications.length > 0 ? (
-                              notifications.map((notification) => (
-                                <div
-                                  key={notification._id}
-                                  className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
-                                  onClick={() => handleNotificationClick(notification)}
-                                >
-                                  <div className="notification-content">
-                                    <h4>{notification.name}</h4>
-                                    <p className="notification-email">{notification.email}</p>
-                                    <p className="notification-message">{notification.message}</p>
-                                    <p className="notification-time">
-                                      {new Date(notification.createdAt).toLocaleString()}
-                                    </p>
-                                  </div>
-                                </div>
-                              ))
-                            ) : (
-                              <div className="no-notifications">No notifications</div>
-                            )}
-                          </div>
-                        </div>
+                {themeButton}
+                <li className="nav-item position-relative" ref={profileWrapRef}>
+                  <button
+                    type="button"
+                    className={`cine-nav-profile-icon cine-nav-profile-trigger${isAdmin && unreadCount > 0 ? ' cine-nav-profile-trigger--badge' : ''}`}
+                    onClick={() => setProfileMenuOpen((o) => !o)}
+                    title="Account menu"
+                    aria-label="Account menu"
+                    aria-expanded={profileMenuOpen}
+                    aria-haspopup="true"
+                  >
+                    <i className="fas fa-user" aria-hidden="true" />
+                    {isAdmin && unreadCount > 0 && (
+                      <span className="cine-nav-profile-dot" aria-hidden="true" />
+                    )}
+                  </button>
+                  {profileMenuOpen && (
+                    <div className="cine-profile-dropdown" role="menu">
+                      <Link
+                        className="cine-profile-dropdown-item"
+                        to="/profile"
+                        role="menuitem"
+                        onClick={() => setProfileMenuOpen(false)}
+                      >
+                        <i className="fas fa-user-circle" aria-hidden="true" />
+                        Profile
+                      </Link>
+                      {isAdmin && (
+                        <Link
+                          className="cine-profile-dropdown-item cine-profile-dropdown-item--with-meta"
+                          to="/notifications"
+                          role="menuitem"
+                          onClick={() => setProfileMenuOpen(false)}
+                        >
+                          <span className="cine-profile-dropdown-item-main">
+                            <i className="fas fa-bell" aria-hidden="true" />
+                            Notifications
+                          </span>
+                          {unreadCount > 0 && (
+                            <span className="cine-profile-dropdown-count">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                          )}
+                        </Link>
                       )}
+                      <button
+                        type="button"
+                        className="cine-profile-dropdown-item cine-profile-dropdown-item--danger"
+                        role="menuitem"
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          handleSignOut();
+                        }}
+                      >
+                        <i className="fas fa-sign-out-alt" aria-hidden="true" />
+                        Log out
+                      </button>
                     </div>
-                  </li>
-                )}
+                  )}
+                </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/signin">Sign In</Link>
+                  <Link className="cine-nav-signin-outline" to="/signin">
+                    Sign In
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/signup">Sign Up</Link>
+                  <Link className="cine-btn-profile cine-btn-profile--ghost" to="/signup">
+                    Sign Up
+                  </Link>
                 </li>
+                {themeButton}
               </>
             )}
           </ul>

@@ -125,7 +125,13 @@ const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
     }
   };
 
-  if (!movie) return <div className="review-page text-center text-light py-5">Loading...</div>;
+  if (!movie) {
+    return (
+      <div className="review-page">
+        <p className="review-loading">Loading…</p>
+      </div>
+    );
+  }
 
   // Sort reviews from latest to oldest
   const sortedReviews = movie.reviews
@@ -133,7 +139,14 @@ const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
     : [];
 
   return (
-    <div className="review-page py-5">
+    <div className="review-page">
+      <header className="cine-page-header">
+        <h1 className="cine-page-title">{movie.name}</h1>
+        <p className="cine-page-subtitle">
+          {movie.releaseYear}
+          {movie.genre ? ` · ${movie.genre}` : ''}
+        </p>
+      </header>
       {error && <div className="error-message">{error}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
       <div className="review-container mx-auto" style={{ maxWidth: '1200px' }}>
@@ -149,20 +162,21 @@ const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
             }}
           />
           <div className="review-details flex-grow-1">
-            <div className="d-flex justify-content-between align-items-start">
-              <h2 className="mb-3">{movie.name}</h2>
+            <div className="d-flex justify-content-end mb-3">
               <button
+                type="button"
                 onClick={handleWatchlistToggle}
-                className={`btn ${isInWatchlist ? 'btn-danger' : 'btn-primary'}`}
-                style={{ marginLeft: '1rem' }}
+                className={`cine-review-watchlist-btn${isInWatchlist ? ' cine-review-watchlist-btn--remove' : ''}`}
+                aria-label={isInWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                title={isInWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
               >
-                <i className="fas fa-bookmark" style={{ marginRight: '8px' }}></i>
+                <i className="fas fa-bookmark" aria-hidden="true" />
               </button>
             </div>
-            <p className="mb-2">
-              ⭐ {getAverageRating(movie.reviews)} ({movie.reviews.length} reviews) • {movie.releaseYear} • {movie.genre}
+            <p className="mb-2 review-meta-line">
+              ⭐ {getAverageRating(movie.reviews)} ({movie.reviews?.length ?? 0} reviews)
             </p>
-            <p className="mb-4">{movie.description}</p>
+            <p className="mb-4 review-desc">{movie.description}</p>
 
             {/* Review Submission Form */}
             {isSignedIn ? (

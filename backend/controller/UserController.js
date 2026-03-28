@@ -2,6 +2,8 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_here';
+
 // User Sign Up
 exports.signUp = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -30,7 +32,7 @@ exports.signUp = async (req, res) => {
         fullName: user.fullName,
         role: user.role
       },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '1h' }
     );
 
@@ -38,7 +40,8 @@ exports.signUp = async (req, res) => {
       id: user._id,
       email: user.email,
       fullName: user.fullName,
-      role: user.role
+      role: user.role,
+      createdAt: user.createdAt
     };
 
     res.status(201).json({
@@ -80,7 +83,7 @@ exports.signIn = async (req, res) => {
         fullName: user.fullName, 
         role: user.role 
       },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '1h' }
     );
 
@@ -88,7 +91,8 @@ exports.signIn = async (req, res) => {
       id: user._id,
       email: user.email,
       fullName: user.fullName,
-      role: user.role
+      role: user.role,
+      createdAt: user.createdAt
     };
 
     console.log('Sign in successful for:', email, 'Role:', user.role);
@@ -141,7 +145,7 @@ exports.adminSignIn = async (req, res) => {
         fullName: user.fullName, 
         role: user.role 
       },
-      process.env.JWT_SECRET || 'your_jwt_secret_key_here',
+      JWT_SECRET,
       { expiresIn: '1h' }
     );
 
@@ -149,7 +153,8 @@ exports.adminSignIn = async (req, res) => {
       id: user._id,
       email: user.email,
       fullName: user.fullName,
-      role: user.role
+      role: user.role,
+      createdAt: user.createdAt
     };
 
     console.log('Admin sign in successful for:', email);

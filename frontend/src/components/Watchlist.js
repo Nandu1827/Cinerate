@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import './Browse.css';
+import './Watchlist.css';
 
 const Watchlist = ({ isSignedIn }) => {
   const [watchlist, setWatchlist] = useState([]);
@@ -18,8 +20,8 @@ const Watchlist = ({ isSignedIn }) => {
         });
         setWatchlist(response.data.movies);
         setError('');
-      } catch (error) {
-        console.error('Error fetching watchlist:', error);
+      } catch (err) {
+        console.error('Error fetching watchlist:', err);
         setError('Failed to load watchlist');
       } finally {
         setLoading(false);
@@ -30,18 +32,23 @@ const Watchlist = ({ isSignedIn }) => {
   }, [isSignedIn]);
 
   const getPosterUrl = (poster) => {
-    if (!poster) return '/default-poster.jpg';
+    if (!poster) return null;
     if (poster.startsWith('http')) return poster;
     return `http://localhost:15400${poster}`;
   };
 
   if (!isSignedIn) {
     return (
-      <div className="watchlist-page container py-5">
-        <div className="text-center">
-          <h2>My Watchlist</h2>
-          <p>Please sign in to view your watchlist.</p>
-          <Link to="/signin" className="btn btn-primary">Sign In</Link>
+      <div className="cine-watchlist">
+        <header className="cine-page-header">
+          <h1 className="cine-page-title">My Watchlist</h1>
+          <p className="cine-page-subtitle">Movies you&apos;ve saved to watch later.</p>
+        </header>
+        <div className="cine-watchlist-empty-box">
+          <p style={{ marginBottom: '1.25rem', color: '#6b7280', fontSize: '0.95rem' }}>
+            Please sign in to view your watchlist.
+          </p>
+          <Link to="/signin" className="cine-btn-primary-solid">Sign In</Link>
         </div>
       </div>
     );
@@ -49,53 +56,63 @@ const Watchlist = ({ isSignedIn }) => {
 
   if (loading) {
     return (
-      <div className="watchlist-page container py-5">
-        <div className="text-center">
-          <h2>My Watchlist</h2>
-          <p>Loading...</p>
-        </div>
+      <div className="cine-watchlist">
+        <header className="cine-page-header">
+          <h1 className="cine-page-title">My Watchlist</h1>
+          <p className="cine-page-subtitle">Movies you&apos;ve saved to watch later.</p>
+        </header>
+        <p className="cine-watchlist-loading">Loading…</p>
       </div>
     );
   }
 
   return (
-    <div className="watchlist-page container py-5">
-      <h2 className="text-center mb-4">My Watchlist</h2>
-      {error && <div className="error-message text-center mb-4">{error}</div>}
-      
+    <div className="cine-watchlist">
+      <header className="cine-page-header">
+        <h1 className="cine-page-title">My Watchlist</h1>
+        <p className="cine-page-subtitle">Movies you&apos;ve saved to watch later.</p>
+      </header>
+
+      {error && <div className="error-message" style={{ marginBottom: '1rem' }}>{error}</div>}
+
       {watchlist.length > 0 ? (
-        <div className="movie-grid">
+        <div className="cine-poster-grid">
           {watchlist.map((movie) => (
-            <div key={movie._id} className="movie-card">
-              <Link to={`/review/${movie._id}`} className="movie-poster-wrapper">
-                <img
-                  src={getPosterUrl(movie.poster)}
-                  alt={`${movie.name} poster`}
-                  className="movie-poster"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/default-poster.jpg';
-                  }}
-                />
-                <div className="movie-overlay">
-                  <span>View Details</span>
-                </div>
-              </Link>
-              <div className="movie-details">
-                <h3>{movie.name} ({movie.releaseYear})</h3>
-                <p><strong>Genre:</strong> {movie.genre}</p>
-              </div>
-            </div>
+            <WatchlistPosterCard key={movie._id} movie={movie} posterUrl={getPosterUrl(movie.poster)} />
           ))}
         </div>
       ) : (
-        <div className="text-center">
-          <p>Your watchlist is empty. Start adding movies!</p>
-          <Link to="/browse" className="btn btn-primary">Browse Movies</Link>
+        <div className="cine-watchlist-empty-box">
+          <div className="cine-watchlist-empty-icon" aria-hidden="true">
+            <i className="fas fa-bookmark" />
+          </div>
+          <h2>Your watchlist is empty</h2>
+          <p>
+            Save movies to your watchlist to keep track of what you want to watch next.
+          </p>
+          <Link to="/browse" className="cine-btn-primary-solid">Browse Movies</Link>
         </div>
       )}
     </div>
   );
 };
 
-export default Watchlist; 
+function WatchlistPosterCard({ movie, posterUrl }) {
+  const [imgOk, setImgOk] = useState(!!posterUrl);
+
+  return (
+    <Link to={`/review/${movie._id}`} className="cine-poster-card">
+      {imgOk && posterUrl ? (
+        <img
+          src={posterUrl}
+          alt=""
+          onError={() => setImgOk(false)}
+        />
+      ) : (
+        <div className="cine-poster-placeholder">Image not available</div>
+      )}
+    </Link>
+  );
+}
+
+export default Watchlist;
