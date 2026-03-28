@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { API_URL, posterUrl } from "../api/api";
 import "./Browse.css";
 
 function averageRating(reviews) {
@@ -24,7 +25,7 @@ const Browse = ({ movies }) => {
     if (searchParams.get("sortBy") === "rating" && movies.length) {
       (async () => {
         try {
-          const response = await axios.get("http://localhost:15400/api/movies", {
+          const response = await axios.get(`${API_URL}/movies`, {
             params: { sortBy: "rating" },
           });
           setFilteredMovies(response.data);
@@ -67,7 +68,7 @@ const Browse = ({ movies }) => {
   const posterSrc = (movie) => {
     if (!movie.poster) return null;
     if (movie.poster.startsWith("http")) return movie.poster;
-    return `http://localhost:15400${movie.poster}`;
+    return posterUrl(movie.poster);
   };
 
   const displayedMovies = useMemo(() => {

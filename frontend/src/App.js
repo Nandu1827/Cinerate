@@ -13,6 +13,7 @@ import Profile from './components/Profile';
 import Watchlist from './components/Watchlist';
 import Footer from './components/Footer'; // Import the Footer
 import axios from 'axios';
+import { API_URL } from './api/api';
 import './App.css';
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get('http://localhost:15400/api/movies/published');
+        const response = await axios.get(`${API_URL}/movies/published`);
         setMovies(response.data);
       } catch (error) {
         console.error('Error fetching movies:', error);

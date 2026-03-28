@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../api/api';
 import './Navbar.css';
 
 const Navbar = ({ isSignedIn, handleSignOut, isAdmin, theme, toggleTheme }) => {
@@ -35,7 +36,7 @@ const Navbar = ({ isSignedIn, handleSignOut, isAdmin, theme, toggleTheme }) => {
         return;
       }
 
-      const response = await axios.get('http://localhost:15400/api/notifications/admin/notifications', {
+      const response = await axios.get(`${API_URL}/notifications/admin/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

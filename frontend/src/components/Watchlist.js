@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL, posterUrl } from '../api/api';
 import './Browse.css';
 import './Watchlist.css';
 
@@ -15,7 +16,7 @@ const Watchlist = ({ isSignedIn }) => {
 
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:15400/api/watchlist', {
+        const response = await axios.get(`${API_URL}/watchlist`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setWatchlist(response.data.movies);
@@ -33,8 +34,7 @@ const Watchlist = ({ isSignedIn }) => {
 
   const getPosterUrl = (poster) => {
     if (!poster) return null;
-    if (poster.startsWith('http')) return poster;
-    return `http://localhost:15400${poster}`;
+    return posterUrl(poster);
   };
 
   if (!isSignedIn) {

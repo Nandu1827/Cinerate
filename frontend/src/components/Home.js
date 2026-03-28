@@ -1,15 +1,12 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { posterUrl } from '../api/api';
 import './Home.css';
 
 const Home = ({ movies, userEmail, isSignedIn }) => {
   const [carouselIndex, setCarouselIndex] = useState(0);
 
-  const getPosterUrl = (poster) => {
-    if (!poster) return '/default-poster.jpg';
-    if (poster.startsWith('http')) return poster;
-    return `http://localhost:15400${poster}`;
-  };
+  const getPosterUrl = (poster) => posterUrl(poster);
 
   const avgRating = (movie) => {
     if (!movie.reviews || movie.reviews.length === 0) return null;

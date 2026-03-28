@@ -1,8 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_here';
+const { JWT_SECRET } = require('../config/jwt');
 
 // User Sign Up
 exports.signUp = async (req, res) => {

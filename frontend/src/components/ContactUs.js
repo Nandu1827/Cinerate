@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../api/api';
 import { useNavigate } from 'react-router-dom';
 
 const ContactUs = ({ isSignedIn }) => {
@@ -21,7 +22,7 @@ const ContactUs = ({ isSignedIn }) => {
     e.preventDefault();
     try {
       console.log('Submitting contact form:', formData);
-      const response = await axios.post('http://localhost:15400/api/notifications/contact', formData);
+      const response = await axios.post(`${API_URL}/notifications/contact`, formData);
       console.log('Contact form response:', response.data);
       setIsSubmitted(true);
       setFormData({ name: '', email: '', message: '' });

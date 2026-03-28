@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL, posterUrl } from '../api/api';
 
 const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
   const { movieId } = useParams();
@@ -17,7 +18,7 @@ const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const response = await axios.get(`http://localhost:15400/api/movies/${movieId}`);
+        const response = await axios.get(`${API_URL}/movies/${movieId}`);
         setMovie(response.data);
         setError('');
       } catch (error) {
@@ -30,7 +31,7 @@ const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
       if (isSignedIn) {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get('http://localhost:15400/api/watchlist', {
+          const response = await axios.get(`${API_URL}/watchlist`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setIsInWatchlist(response.data.movies.some(m => m._id === movieId));
@@ -53,7 +54,7 @@ const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
   const getPosterUrl = (poster) => {
     if (!poster) return '/default-poster.jpg';
     if (poster.startsWith('http')) return poster;
-    return `http://localhost:15400${poster}`;
+    return posterUrl(poster);
   };
 
   const hasReviewed = movie?.reviews?.some(review => review.userEmail === userEmail) || false;
@@ -69,7 +70,7 @@ const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:15400/api/movies/${movieId}/review`,
+        `${API_URL}/movies/${movieId}/review`,
         { 
           rating, 
           comment, 
@@ -107,12 +108,12 @@ const Review = ({ movies, setMovies, isSignedIn, userEmail, userFullName }) => {
     try {
       const token = localStorage.getItem('token');
       if (isInWatchlist) {
-        await axios.delete(`http://localhost:15400/api/watchlist/${movieId}`, {
+        await axios.delete(`${API_URL}/watchlist/${movieId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSuccessMessage('Movie removed from watchlist');
       } else {
-        await axios.post(`http://localhost:15400/api/watchlist/${movieId}`, {}, {
+        await axios.post(`${API_URL}/watchlist/${movieId}`, {}, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSuccessMessage('Movie added to watchlist');

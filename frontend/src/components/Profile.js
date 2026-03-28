@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL, posterUrl } from '../api/api';
 import './Profile.css';
 import './Browse.css';
 
@@ -34,11 +35,7 @@ function memberSinceLabel(createdAt) {
 }
 
 function ProfilePosterCard({ movieId, poster }) {
-  const url = poster
-    ? poster.startsWith('http')
-      ? poster
-      : `http://localhost:15400${poster}`
-    : null;
+  const url = poster ? posterUrl(poster) : null;
   const [imgOk, setImgOk] = useState(!!url);
 
   return (
@@ -72,7 +69,7 @@ const Profile = ({ movies, userEmail, userFullName, onUserUpdate }) => {
       try {
         const token = localStorage.getItem('token');
         if (!token) return;
-        const res = await axios.get('http://localhost:15400/api/watchlist', {
+        const res = await axios.get(`${API_URL}/watchlist`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setWatchlist(res.data.movies || []);

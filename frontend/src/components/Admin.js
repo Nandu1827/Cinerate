@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL, posterUrl } from '../api/api';
 
 const Admin = ({ setMovies }) => {
   const [name, setName] = useState('');
@@ -19,7 +20,7 @@ const Admin = ({ setMovies }) => {
 
   const fetchMovies = async () => {
     try {
-      const response = await axios.get('http://localhost:15400/api/movies');
+      const response = await axios.get(`${API_URL}/movies`);
       setLocalMovies(response.data);
     } catch (error) {
       setError('Failed to fetch movies');
@@ -74,7 +75,7 @@ const Admin = ({ setMovies }) => {
 
       if (editingMovie) {
         response = await axios.put(
-          `http://localhost:15400/api/movies/${editingMovie._id}`,
+          `${API_URL}/movies/${editingMovie._id}`,
           formData,
           {
             headers: {
@@ -85,7 +86,7 @@ const Admin = ({ setMovies }) => {
         );
         setSuccess('Movie updated successfully!');
       } else {
-        response = await axios.post('http://localhost:15400/api/movies', formData, {
+        response = await axios.post(`${API_URL}/movies`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`,
@@ -116,7 +117,7 @@ const Admin = ({ setMovies }) => {
     setGenre(movie.genre);
     setReleaseYear(movie.releaseYear);
     setDescription(movie.description);
-    setPreview(movie.poster.startsWith('http') ? movie.poster : `http://localhost:15400${movie.poster}`);
+    setPreview(posterUrl(movie.poster));
   };
 
   const handleDelete = async (movieId) => {
@@ -126,7 +127,7 @@ const Admin = ({ setMovies }) => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:15400/api/movies/${movieId}`, {
+      await axios.delete(`${API_URL}/movies/${movieId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -235,7 +236,7 @@ const Admin = ({ setMovies }) => {
             {movies.map((movie) => (
               <div key={movie._id} className="movie-card">
                 <img
-                  src={movie.poster.startsWith('http') ? movie.poster : `http://localhost:15400${movie.poster}`}
+                  src={posterUrl(movie.poster)}
                   alt={`${movie.name} poster`}
                   className="movie-poster"
                 />

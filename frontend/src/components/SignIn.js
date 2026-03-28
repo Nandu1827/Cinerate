@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../api/api';
 import './Auth.css';
 
 const SignIn = ({ setIsAdmin, setIsSignedIn, setUserEmail, setUserFullName }) => {
@@ -23,8 +24,8 @@ const SignIn = ({ setIsAdmin, setIsSignedIn, setUserEmail, setUserFullName }) =>
     try {
       const endpoint =
         email === 'admin@example.com'
-          ? 'http://localhost:15400/api/users/admin/signin'
-          : 'http://localhost:15400/api/users/signin';
+          ? `${API_URL}/users/admin/signin`
+          : `${API_URL}/users/signin`;
 
       const response = await axios.post(endpoint, {
         email,

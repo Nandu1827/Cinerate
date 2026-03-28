@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { API_URL } from '../api/api';
 import './AdminNotifications.css';
 
 const AdminNotifications = () => {
@@ -18,7 +19,7 @@ const AdminNotifications = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:15400/api/notifications/admin/notifications', {
+      const response = await axios.get(`${API_URL}/notifications/admin/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -53,7 +54,7 @@ const AdminNotifications = () => {
       if (!token) return;
 
       await axios.put(
-        `http://localhost:15400/api/notifications/admin/notifications/${notification._id}/read`,
+        `${API_URL}/notifications/admin/notifications/${notification._id}/read`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -85,7 +86,7 @@ const AdminNotifications = () => {
       setDeleteError('');
       setDeletingId(id);
       await axios.delete(
-        `http://localhost:15400/api/notifications/admin/notifications/${encodeURIComponent(String(id))}`,
+        `${API_URL}/notifications/admin/notifications/${encodeURIComponent(String(id))}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

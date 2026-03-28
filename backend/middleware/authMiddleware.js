@@ -1,18 +1,18 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { JWT_SECRET } = require('../config/jwt');
+const tokenFromRequest = require('./tokenFromRequest');
 
 exports.isAdmin = async (req, res, next) => {
   try {
-    // Get token from header
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
+    const token = tokenFromRequest(req);
+
     if (!token) {
       console.log('No token provided');
       return res.status(401).json({ message: 'No token, authorization denied' });
     }
 
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key_here');
+    const decoded = jwt.verify(token, JWT_SECRET);
     console.log('Decoded token:', decoded);
     
     // Get user from database
