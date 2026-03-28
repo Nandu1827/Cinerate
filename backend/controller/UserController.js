@@ -3,12 +3,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/jwt');
 
+// =========================
 // User Sign Up
+// =========================
 exports.signUp = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password, role } = req.body;
+
   try {
-    // Check if fullName (username) or email already exists
+    // Check if user already exists
     let user = await User.findOne({ $or: [{ fullName }, { email }] });
+
     if (user) {
       if (user.fullName === fullName) {
         return res.status(400).json({ message: 'Username already exists' });
@@ -18,12 +22,20 @@ exports.signUp = async (req, res) => {
       }
     }
 
-    // Hash the password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    user = new User({ fullName, email, password: hashedPassword, role: 'user' });
+
+    // Create user (🔥 FIX: allow role)
+    user = new User({
+      fullName,
+      email,
+      password: hashedPassword,
+      role: role || 'user'   // ✅ supports admin creation
+    });
+
     await user.save();
 
-    // Generate JWT token after signup
+    // Generate token
     const token = jwt.sign(
       {
         id: user._id,
@@ -35,134 +47,119 @@ exports.signUp = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    const userResponse = {
-      id: user._id,
-      email: user.email,
-      fullName: user.fullName,
-      role: user.role,
-      createdAt: user.createdAt
-    };
-
+    // Response
     res.status(201).json({
       message: 'Account created successfully',
       token,
-      user: userResponse
+      user: {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+        createdAt: user.createdAt
+      }
     });
+
   } catch (error) {
-    console.error('Sign up error:', error);
+    console.error('❌ Sign up error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
+// =========================
 // User Sign In
+// =========================
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
+
   try {
-    console.log('Attempting user sign in for:', email);
+    console.log('🔐 User login attempt:', email);
+
     const user = await User.findOne({ email });
-    
+
     if (!user) {
-      console.log('User not found:', email);
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    console.log('User found, comparing passwords');
     const isMatch = await bcrypt.compare(password, user.password);
-    
+
     if (!isMatch) {
-      console.log('Password mismatch for:', email);
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    console.log('Password matched, generating token for:', email);
     const token = jwt.sign(
-      { 
-        id: user._id, 
-        email: user.email, 
-        fullName: user.fullName, 
-        role: user.role 
+      {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role
       },
       JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    const userResponse = {
-      id: user._id,
-      email: user.email,
-      fullName: user.fullName,
-      role: user.role,
-      createdAt: user.createdAt
-    };
-
-    console.log('Sign in successful for:', email, 'Role:', user.role);
     res.status(200).json({
       token,
-      user: userResponse
+      user: {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+        createdAt: user.createdAt
+      }
     });
+
   } catch (error) {
-    console.error('Sign in error:', error);
+    console.error('❌ Sign in error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
+// =========================
 // Admin Sign In
+// =========================
 exports.adminSignIn = async (req, res) => {
   const { email, password } = req.body;
+
   try {
-    console.log('Attempting admin sign in for:', email);
-    
-    // First find any user with this email
+    console.log('👑 Admin login attempt:', email);
+
     const user = await User.findOne({ email });
-    console.log('User found:', user ? 'Yes' : 'No');
-    
-    if (!user) {
-      console.log('No user found with email:', email);
+
+    if (!user || user.role !== 'admin') {
       return res.status(400).json({ message: 'Invalid admin credentials' });
     }
 
-    // Then check if they are an admin
-    console.log('User role:', user.role);
-    if (user.role !== 'admin') {
-      console.log('User found but not an admin:', email);
-      return res.status(400).json({ message: 'Invalid admin credentials' });
-    }
-
-    console.log('Admin found, comparing passwords');
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log('Password match:', isMatch ? 'Yes' : 'No');
-    
+
     if (!isMatch) {
-      console.log('Password mismatch for admin:', email);
       return res.status(400).json({ message: 'Invalid admin credentials' });
     }
 
-    console.log('Password matched, generating token for admin:', email);
     const token = jwt.sign(
-      { 
-        id: user._id, 
-        email: user.email, 
-        fullName: user.fullName, 
-        role: user.role 
+      {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role
       },
       JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    const adminResponse = {
-      id: user._id,
-      email: user.email,
-      fullName: user.fullName,
-      role: user.role,
-      createdAt: user.createdAt
-    };
-
-    console.log('Admin sign in successful for:', email);
     res.status(200).json({
       token,
-      admin: adminResponse
+      admin: {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+        createdAt: user.createdAt
+      }
     });
+
   } catch (error) {
-    console.error('Admin sign in error:', error);
+    console.error('❌ Admin sign in error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
